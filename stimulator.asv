@@ -92,13 +92,7 @@ addAnalogOutputChannel(s,'Dev1',0,'Voltage');
 addAnalogInputChannel(s,'Dev1',[0 1],'Voltage');
 s.Rate = 1000;
 
-% Setting the data log settings
-filename1=handles.mousename.String;
-filename2=handles.mousenumber.String;
-pathname=handles.mousepath.String;
-savename=strcat(pathname,'\',filename1,'_',filename2,'.bin');
-fid1 = fopen(savename,'w');
-lh = addlistener(s,'DataAvailable',@(src, event)logData(src, event, fid1));
+%
 
 
 % Creat stimulation queue
@@ -115,11 +109,8 @@ stim4=stim4';
 % Prepare to stimulation
 queueOutputData(s,stim4);
 set(handles.stim_stat,'String','Running')
-s.startForeground();
+s.startBackground;
 set(handles.stim_stat,'String','Idle')
-delete(lh);
-fclose(fid1);
-
 
 
 
@@ -318,6 +309,5 @@ function getpath_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 fp=uigetdir('C:\','Choose a directory to save data.');
-set(handles.mousepath,'string',fp);
+set(hObject.Filepath,'string',fp);
 guidata(hObject, handles);
-
